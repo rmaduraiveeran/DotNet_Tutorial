@@ -89,5 +89,53 @@ var summary = await cart.GetSummaryAsync();</code></pre></div>
   <li>Turn-based execution eliminates locks by construction.</li>
   <li>Ideal for stateful, interactive, write-heavy entity workloads.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add a <code>ReminderGrain</code> using <code>RegisterTimer</code> that fires once per minute per active cart.</li><li>Implement grain-to-grain transactions across cart + inventory (two persistent stores, one commit).</li><li>Stress-test with 10k grain activations; watch silo memory &amp; activation counts.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Orleans grains are 'virtual' because…",
+      "a": [
+        "They are abstract",
+        "Always addressable by ID; runtime activates/persists them transparently",
+        "They run on VMs",
+        "They are fake"
+      ],
+      "correct": 1,
+      "expl": "No lifecycle code — call a grain and it exists."
+    },
+    {
+      "q": "Grain concurrency model…",
+      "a": [
+        "Free-for-all",
+        "Single-threaded turns — no locks needed",
+        "Pessimistic locks",
+        "Optimistic only"
+      ],
+      "correct": 1,
+      "expl": "One request at a time per grain; concurrency across many grains."
+    },
+    {
+      "q": "IPersistentState<T> provides…",
+      "a": [
+        "In-memory cache",
+        "Declarative persistence via storage providers",
+        "A database",
+        "Sessions"
+      ],
+      "correct": 1,
+      "expl": "WriteStateAsync persists; provider = Azure/Cosmos/Dynamo/memory."
+    },
+    {
+      "q": "Orleans is a poor fit for…",
+      "a": [
+        "Game backends",
+        "Mostly-CRUD apps over a relational DB",
+        "IoT",
+        "Carts/sessions"
+      ],
+      "correct": 1,
+      "expl": "Plain EF Core + API is simpler when state is passive rows."
+    }
+  ]
+
 };

@@ -119,5 +119,53 @@ Console.WriteLine(price == new Money(9.99m, "USD"));  // True &mdash; value equa
   <li>Polymorphism removes type-checking if/else chains.</li>
   <li><code>record</code> = immutable data with value equality and <code>with</code> cloning.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add an <code>IOverdraftable</code> interface implemented by one account type &mdash; polymorphically withdraw without type checks.</li><li>Convert <code>Money</code> to use a validation constructor that throws on negative amounts.</li><li>Make <code>Shape.Describe</code> virtual + overridden twice, then call it from a <code>foreach</code> over <code>IEnumerable&lt;Shape&gt;</code>.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Encapsulation means…",
+      "a": [
+        "All members public",
+        "Fields private, state changed only through methods that enforce rules",
+        "Everything static",
+        "Using only structs"
+      ],
+      "correct": 1,
+      "expl": "Encapsulation hides state and exposes intent-bearing operations."
+    },
+    {
+      "q": "Polymorphism lets you…",
+      "a": [
+        "Have many constructors",
+        "Call one method name and get type-specific behavior",
+        "Inherit multiple classes",
+        "Avoid interfaces"
+      ],
+      "correct": 1,
+      "expl": "Virtual/interface dispatch means one call site, many implementations."
+    },
+    {
+      "q": "record vs class — records give you…",
+      "a": [
+        "Faster methods",
+        "Value equality, immutability, and with-cloning by default",
+        "Multiple inheritance",
+        "No constructors"
+      ],
+      "correct": 1,
+      "expl": "Records are data-centric: generated equality, ToString, and nondestructive mutation."
+    },
+    {
+      "q": "Program against ___ so implementations can be swapped:",
+      "a": [
+        "Concrete classes",
+        "Interfaces",
+        "Static methods",
+        "Global variables"
+      ],
+      "correct": 1,
+      "expl": "Depending on abstractions enables testing (Day 13) and DI (Day 14)."
+    }
+  ]
+
 };

@@ -74,5 +74,53 @@ M7  README with architecture diagram, run instructions,
   <li>Specialize next; depth in one area compounds faster than breadth.</li>
   <li>Ship, get feedback, ship again. That loop <em>is</em> the career.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add a GitHub Actions deploy step to Azure App Service / Fly.io on tag push.</li><li>Write an architecture decision record (ADR) for one real choice you made.</li><li>Record a 2-minute demo video of the deployed capstone &mdash; the best README is motion.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "A portfolio capstone should be…",
+      "a": [
+        "Huge and half-done",
+        "Small, polished, deployed, documented, tested",
+        "A TODO app",
+        "Private"
+      ],
+      "correct": 1,
+      "expl": "Depth beats breadth; deployment proves it runs for real."
+    },
+    {
+      "q": "The capstone milestone order starts with…",
+      "a": [
+        "Deployment",
+        "Domain + persistence, then API, then UI/AI/infra",
+        "UI first",
+        "AI first"
+      ],
+      "correct": 1,
+      "expl": "Foundation first — each milestone ends green and committed."
+    },
+    {
+      "q": "After the 30 days, the recommendation is…",
+      "a": [
+        "Stop",
+        "Specialize deeply in one area (perf/distributed/AI)",
+        "Learn another language",
+        "Only certifications"
+      ],
+      "correct": 1,
+      "expl": "Depth compounds faster than breadth."
+    },
+    {
+      "q": "'Ship, get feedback, ship again' means…",
+      "a": [
+        "Ship once",
+        "The shipping loop IS the career skill",
+        "Feedback is optional",
+        "Ship in secret"
+      ],
+      "correct": 1,
+      "expl": "Real users and real deployments teach what tutorials cannot."
+    }
+  ]
+
 };

@@ -84,5 +84,53 @@ var firstEven = FirstOrNull(new[] { 1, 3, 5, 6 }, n =&gt; n % 2 == 0);   // 6
   <li><code>Func</code>/<code>Action</code> parameters make generic code flexible.</li>
   <li>Variance (<code>in</code>/<code>out</code>) explains most "why won't this assign" moments.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Write <code>static T MaxBy&lt;T&gt;(this IEnumerable&lt;T&gt;, Func&lt;T,object&gt; key)</code> as an extension method.</li><li>Add covariance: <code>out T</code> on a custom <code>IRepository&lt;out T&gt;</code> and show assignment to the base type.</li><li>Implement <code>Result&lt;T&gt;.Map&lt;U&gt;(Func&lt;T,U&gt;)</code> that chains only on success &mdash; a railway-oriented start.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Generics replace object-based collections primarily to…",
+      "a": [
+        "Save memory",
+        "Get compile-time type safety without casts/boxing",
+        "Run faster loops",
+        "Support dynamic"
+      ],
+      "correct": 1,
+      "expl": "Type errors move to compile time; no runtime casts."
+    },
+    {
+      "q": "where T : IComparable<T> unlocks…",
+      "a": [
+        "new T()",
+        "Calling CompareTo on T",
+        " boxing",
+        "Reflection"
+      ],
+      "correct": 1,
+      "expl": "Constraints expose interface members to the compiler."
+    },
+    {
+      "q": "IEnumerable<Cat> → IEnumerable<Animal> works because of…",
+      "a": [
+        "Contravariance (in)",
+        "Covariance (out)",
+        "Casting",
+        "Generics inheritance"
+      ],
+      "correct": 1,
+      "expl": "out T is covariant: safe when T only appears in output positions."
+    },
+    {
+      "q": "Cache.GetOrAdd(key, factory) — the factory parameter type is…",
+      "a": [
+        "Action<TKey>",
+        "Func<TKey,TValue>",
+        "Predicate<TKey>",
+        "Converter"
+      ],
+      "correct": 1,
+      "expl": "It produces a TValue from a TKey — a Func."
+    }
+  ]
+
 };

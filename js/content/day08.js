@@ -85,5 +85,53 @@ Console.WriteLine(counter);             // 2 &mdash; the outer variable changed
   <li><code>?.</code> before invoking events avoids null storms.</li>
   <li>Lambdas capture variables &mdash; that is both their power and their trap.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Build <code>EventAggregator</code> &mdash; a static class with <code>Publish&lt;T&gt;/Subscribe&lt;T&gt;</code> using delegates + weak references.</li><li>Create a <code>Pipeline&lt;T&gt;</code> where each step can short-circuit (return null) and verify downstream steps are skipped.</li><li>Demonstrate the closure-in-loop bug with a pre-C#5 style <code>for</code> loop, then fix it two ways.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Func<int,int,bool> is…",
+      "a": [
+        "A class",
+        "A delegate type: two int inputs, bool result",
+        "An event",
+        "A lambda keyword"
+      ],
+      "correct": 1,
+      "expl": "Func's last type parameter is the return type."
+    },
+    {
+      "q": "event Action<double>? Changed; — why invoke with ?. ?",
+      "a": [
+        "Style",
+        "No subscribers = null; ?. avoids NullReferenceException",
+        "Performance",
+        "Thread safety"
+      ],
+      "correct": 1,
+      "expl": "Changed?.Invoke(x) is the safe raise pattern."
+    },
+    {
+      "q": "A closure means the lambda…",
+      "a": [
+        "Copies variables",
+        "Captures the variable itself, not its value",
+        "Cannot access locals",
+        "Creates a new scope always"
+      ],
+      "correct": 1,
+      "expl": "Captured variables live as long as the delegate — that is both the power and the trap."
+    },
+    {
+      "q": "Where do delegates NOT naturally appear?",
+      "a": [
+        "LINQ predicates",
+        "Middleware pipelines",
+        "MVM commands",
+        "GC generations"
+      ],
+      "correct": 3,
+      "expl": "The GC is runtime machinery — the other three are delegate-based designs."
+    }
+  ]
+
 };

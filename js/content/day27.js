@@ -101,5 +101,53 @@ builder.Services.AddSingleton(new DefaultObjectPool&lt;StringBuilder&gt;(new Str
   <li>Span + stackalloc + pools are the allocation-killer toolkit.</li>
   <li>Structured logging avoids string-building on paths that don't log.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Benchmark <code>string.Concat</code> vs <code>string.Create</code> vs interpolation &mdash; 3 columns, MemoryDiagnoser.</li><li>Reduce a parser&rsquo;s allocations to zero with <code>ReadOnlySpan</code> + <code>stackalloc</code> &mdash; prove with the allocator column.</li><li>Pool <code>StringBuilder</code> via <code>ObjectPool</code> and measure P95 latency change.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Gen 0 collections are cheap because…",
+      "a": [
+        "The heap is small",
+        "Most objects die young; only the newest region is scanned",
+        "The GC pauses",
+        "Of compression"
+      ],
+      "correct": 1,
+      "expl": "Generational hypothesis: design allocations to die in Gen 0."
+    },
+    {
+      "q": "BenchmarkDotNet rules…",
+      "a": [
+        "Debug is fine",
+        "Release only, with MemoryDiagnoser for allocations",
+        "No warmup needed",
+        "Approximate"
+      ],
+      "correct": 1,
+      "expl": "Debug lacks JIT optimizations; allocations matter as much as time."
+    },
+    {
+      "q": "Span<T> slicing avoids…",
+      "a": [
+        "Null checks",
+        "Copying — it is a window over existing memory",
+        "Bounds checks",
+        "The stack"
+      ],
+      "correct": 1,
+      "expl": "Parse and slice without allocations."
+    },
+    {
+      "q": "ArrayPool<T> exists to…",
+      "a": [
+        "Sort faster",
+        "Reuse buffers and cut GC pressure on hot paths",
+        "Save memory on disk",
+        "Avoid using statements"
+      ],
+      "correct": 1,
+      "expl": "Rent/return in finally; bugs = corruption."
+    }
+  ]
+
 };

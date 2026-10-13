@@ -113,5 +113,53 @@ public void Reset_ClearsCount_AndRespectsCanExecute()
   <li>Commands carry enable/disable logic &mdash; test VMs without a screen.</li>
   <li>The pattern transfers: WPF, MAUI, Avalonia, even Blazor.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add <code>[RelayCommand(IncludeCancelCommand = true)]</code> to a slow load command &mdash; cancel mid-flight and observe.</li><li>Implement a <code>DesignTimeViewModel</code> with sample data for the XAML designer.</li><li>Use <code>WeakReferenceMessenger</code> to send a &ldquo;task completed&rdquo; message from VM to VM.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "In MVVM, the ViewModel…",
+      "a": [
+        "Renders HTML",
+        "Owns state + commands, testable without UI",
+        "Is the database",
+        "Replaces the View"
+      ],
+      "correct": 1,
+      "expl": "View binds to VM; VM knows no UI types."
+    },
+    {
+      "q": "[ObservableProperty] generates…",
+      "a": [
+        "A database column",
+        "A property with INotifyPropertyChanged wiring",
+        "A command",
+        "A view"
+      ],
+      "correct": 1,
+      "expl": "Source generators remove the INPC boilerplate."
+    },
+    {
+      "q": "Commands (ICommand) beat click handlers because they…",
+      "a": [
+        "Run faster",
+        "Carry CanExecute enabling/disabling + testability",
+        "Avoid XAML",
+        "Are async-only"
+      ],
+      "correct": 1,
+      "expl": "Button auto-disables; unit tests invoke commands directly."
+    },
+    {
+      "q": "Setting a bound property from a background thread…",
+      "a": [
+        "Is fine",
+        "Crashes — marshal to the UI thread first",
+        "Is faster",
+        "Queues automatically"
+      ],
+      "correct": 1,
+      "expl": "UI frameworks are single-threaded; use the Dispatcher."
+    }
+  ]
+
 };

@@ -94,5 +94,53 @@ public class EmailSender(IOptions&lt;SmtpOptions&gt; options)
   <li>Options pattern = typed, validated, reloadable configuration.</li>
   <li>The composition root is the only place that knows concrete types.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Register the same interface twice (two implementations) and consume <code>IEnumerable&lt;IFileSink&gt;</code>.</li><li>Add <code>IOptionsMonitor&lt;SmtpOptions&gt;</code> hot-reload: change JSON at run time, log the change.</li><li>Write a test asserting the DI container throws for captive dependency (Singleton &rarr; Scoped).</li></ul>
+`,
+  quiz: [
+    {
+      "q": "The captive dependency bug is…",
+      "a": [
+        "A DI memory leak",
+        "A Singleton depending on a Scoped service",
+        "A wrong namespace",
+        "A NuGet conflict"
+      ],
+      "correct": 1,
+      "expl": "Longer lifetimes must never depend on shorter ones."
+    },
+    {
+      "q": "One DbContext instance per HTTP request = which lifetime?",
+      "a": [
+        "Singleton",
+        "Scoped",
+        "Transient",
+        "Static"
+      ],
+      "correct": 1,
+      "expl": "Scoped — created per request, disposed at its end."
+    },
+    {
+      "q": "IOptions<SmtpOptions> gives you…",
+      "a": [
+        "JSON only",
+        "Typed, validated, hot-reloadable configuration",
+        "Encryption",
+        "Per-tenant config"
+      ],
+      "correct": 1,
+      "expl": "The options pattern binds config sections to types."
+    },
+    {
+      "q": "The composition root is…",
+      "a": [
+        "Program.cs's Main",
+        "The single place that maps abstractions to implementations",
+        "The appsettings file",
+        "The container itself"
+      ],
+      "correct": 1,
+      "expl": "Everything else asks for interfaces; one place decides concretions."
+    }
+  ]
+
 };

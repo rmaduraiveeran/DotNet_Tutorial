@@ -99,5 +99,53 @@ if (SplitName(full, out var first, out var last))
   <li>Methods should be small, verb-named, and validate early.</li>
   <li>Tuples and out parameters give you multiple &ldquo;returns&rdquo; cleanly.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Implement <code>static (int Min, int Max, double Avg) Stats(params int[])</code> with tuples + expression bodies.</li><li>Rewrite FizzBuzz twice: once with if/else, once with switch on tuples &mdash; compare readability.</li><li>Add XML doc comments to every method, then hover in the IDE to see them rendered.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "The best fit for mapping a score to a grade is…",
+      "a": [
+        "for loop",
+        "switch expression",
+        "while loop",
+        "goto"
+      ],
+      "correct": 1,
+      "expl": "Switch expressions map values to results exhaustively and readably."
+    },
+    {
+      "q": "break vs continue in a loop:",
+      "a": [
+        "Same behavior",
+        "break exits the loop; continue skips to the next pass",
+        "continue exits; break skips",
+        "Only valid in while loops"
+      ],
+      "correct": 1,
+      "expl": "break terminates the loop entirely; continue jumps to the next iteration."
+    },
+    {
+      "q": "static bool TryParse(string s, out int v) — the out parameter…",
+      "a": [
+        "Must be initialized before the call",
+        "Is assigned by the method as a second return value",
+        "Is passed by value",
+        "Cannot be generic"
+      ],
+      "correct": 1,
+      "expl": "out is for the Try-pattern: the method returns a bool plus the parsed value through out."
+    },
+    {
+      "q": "A method with 8 parameters usually signals…",
+      "a": [
+        "Great performance",
+        "It should take an options object or be split",
+        "Use of too much memory",
+        "It needs to be async"
+      ],
+      "correct": 1,
+      "expl": "Long parameter lists hint at a missing abstraction; group them or split responsibilities."
+    }
+  ]
+
 };

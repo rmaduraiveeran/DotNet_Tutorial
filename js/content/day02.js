@@ -87,5 +87,53 @@ string Describe(int score) =&gt; score switch
   <li><code>decimal</code> for money, <code>double</code> for physics.</li>
   <li>Nullable reference types turn runtime crashes into compiler warnings.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Write <code>static string Describe(object o)</code> using pattern matching (<code>o is int n &amp;&amp; n &gt; 0</code>) for int/string/bool/null.</li><li>Benchmark <code>decimal</code> vs <code>double</code> money arithmetic &mdash; find the rounding difference case.</li><li>Make every field nullable, then fix all compiler warnings without <code>!</code> suppressions.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Which type should you use for money?",
+      "a": [
+        "double",
+        "float",
+        "decimal",
+        "long"
+      ],
+      "correct": 2,
+      "expl": "decimal is base-10 and avoids binary rounding artifacts on currency values."
+    },
+    {
+      "q": "var name = \"Ada\"; — the variable's type is…",
+      "a": [
+        "dynamic",
+        "object",
+        "string",
+        "unknown until run time"
+      ],
+      "correct": 2,
+      "expl": "var is inference, not dynamic typing: name is strongly typed as string at compile time."
+    },
+    {
+      "q": "string? maybe = null; — the ? means…",
+      "a": [
+        "The string is immutable",
+        "The variable may be null",
+        "It is a char array",
+        "Nullable throws when null"
+      ],
+      "correct": 1,
+      "expl": "Nullable reference types make intent explicit; the compiler warns on unchecked use."
+    },
+    {
+      "q": "int a = 10, b = 3; what is a / b?",
+      "a": [
+        "3.33",
+        "3",
+        "4",
+        "Compilation error"
+      ],
+      "correct": 1,
+      "expl": "Integer division truncates. Cast to double for the fractional result."
+    }
+  ]
+
 };

@@ -91,5 +91,53 @@ Console.WriteLine(int.Parse(first));                     // 10</code></pre></div
   <li>Collection expressions <code>[..]</code> are the modern literal syntax.</li>
   <li><code>Span&lt;T&gt;</code> slices memory without copying &mdash; meet it now, master it later.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Benchmark <code>List.Contains</code> in a loop vs <code>HashSet</code> pre-conversion at 10k items &mdash; measure the O(n&middot;m) &rarr; O(n) win.</li><li>Implement a tiny <code>LruCache&lt;K,V&gt;</code> with <code>LinkedList</code> + <code>Dictionary</code>.</li><li>Rewrite the inventory with <code>SortedDictionary</code> and note which reports become free.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Fastest collection for 'does this key exist?' lookups:",
+      "a": [
+        "List<T>",
+        "Dictionary<K,V>",
+        "Queue<T>",
+        "Array"
+      ],
+      "correct": 1,
+      "expl": "Dictionary is O(1) by key; List.Contains is O(n)."
+    },
+    {
+      "q": "List<T>.Add is amortized O(1) because…",
+      "a": [
+        "It uses a linked list",
+        "Capacity doubles when full",
+        "It preallocates infinite memory",
+        "It is always O(1) per element"
+      ],
+      "correct": 1,
+      "expl": "Doubling means copies get rarer as the list grows; pre-size it when the final count is known."
+    },
+    {
+      "q": "int[] merged = [..arr, 4, 5]; — the .. is…",
+      "a": [
+        "A range check",
+        "Spread: copies arr's elements into the new array",
+        "A pointer",
+        "Null-coalescing"
+      ],
+      "correct": 1,
+      "expl": "C# 12 collection expressions support spread elements."
+    },
+    {
+      "q": "Span<T> slicing is special because it…",
+      "a": [
+        "Copies data safely",
+        "Creates a window over existing memory with no copy",
+        "Only works on strings",
+        "Is slower than Substring"
+      ],
+      "correct": 1,
+      "expl": "Span is a view, not a copy — that is why parsing with it is fast."
+    }
+  ]
+
 };

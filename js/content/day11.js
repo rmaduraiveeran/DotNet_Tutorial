@@ -87,5 +87,53 @@ dict.AddOrUpdate("hits", 1, (_, n) =&gt; n + 1);</code></pre></div>
   <li>Never block on async code; propagate <code>CancellationToken</code>s.</li>
   <li>Shared mutable state needs <code>Interlocked</code>, locks, or concurrent collections.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Implement <code>static async Task&lt;(T a, U b)&gt; WhenBoth&lt;T,U&gt;(Task&lt;T&gt;, Task&lt;U&gt;)</code> using <code>WhenAll</code> + a cast.</li><li>Write the timeout race: <code>Task.WhenAny(work, Task.Delay(500))</code> &mdash; and cancel the loser properly.</li><li>Benchmark sequential vs concurrent fetches of 5 URLs; print both totals.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "await on an I/O call…",
+      "a": [
+        "Blocks the thread",
+        "Releases the thread while the I/O is in flight",
+        "Creates a new thread",
+        "Runs on the GPU"
+      ],
+      "correct": 1,
+      "expl": "await = asynchronous wait; the thread returns to the pool."
+    },
+    {
+      "q": "Two independent HTTP calls should be…",
+      "a": [
+        "Awaited one then the other",
+        "Started together, joined with Task.WhenAll",
+        "Run in a loop",
+        "Made synchronous"
+      ],
+      "correct": 1,
+      "expl": "Start both, await both — total latency is the max, not the sum."
+    },
+    {
+      "q": "task.Result in ASP.NET Core is dangerous because it…",
+      "a": [
+        "Is deprecated",
+        "Can deadlock/starve the thread pool",
+        "Is slower only sometimes",
+        "Throws always"
+      ],
+      "correct": 1,
+      "expl": "Blocking on async code is the classic async bug — always await."
+    },
+    {
+      "q": "counter++ from 100 parallel tasks loses updates because…",
+      "a": [
+        "The GC interferes",
+        "++ is not atomic — use Interlocked.Increment",
+        "Tasks are slow",
+        "Ints overflow"
+      ],
+      "correct": 1,
+      "expl": "Read-modify-write races; Interlocked makes it atomic."
+    }
+  ]
+
 };

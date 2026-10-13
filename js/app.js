@@ -16,6 +16,7 @@
   } catch (e) { /* first run */ }
 
   function persist() {
+    snapshotQuizState();
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable */ }
   }
 
@@ -38,6 +39,113 @@
     return null;
   }
   function completedCount() { return days.filter(function (d) { return state.completed[d.id]; }).length; }
+
+  /* ---------- section model: turn one big page into subtopic subpages ---------- */
+  /* Splits a lesson's html on <h2> boundaries. Section 0 = everything before the
+     first h2 (intro). Each section gets: id, title, html. Used by the day page
+     ("In this topic" cards) and the subtopic route (#/day/15/s/2). */
+  var sectionCache = {};
+  function splitSections(key, html) {
+    if (sectionCache[key]) return sectionCache[key];
+    var H2 = /<h2[^>]*>([\s\S]*?)<\/h2>/g, sections = [], m, idx = [];
+    while ((m = H2.exec(html)) !== null) idx.push({ start: m.index, title: m[1].replace(/<[^>]+>/g, "").trim() });
+    if (idx.length === 0) { sectionCache[key] = [{ id: 0, title: "Lesson", html: html }]; return sectionCache[key]; }
+    idx.forEach(function (h, i) {
+      var end = i + 1 < idx.length ? idx[i + 1].start : html.length;
+      sections.push({ id: i + 1, title: h.title, html: html.slice(h.start, end) });
+    });
+    // intro chunk before the first h2:
+    var intro = html.slice(0, idx[0].start);
+    if (intro.replace(/<[^>]+>/g, "").trim().length > 40)
+      sections.unshift({ id: 0, title: "Overview", html: intro });
+    sectionCache[key] = sections;
+    return sections;
+  }
+  function sectionsFor(key, provider) {
+    if (sectionCache[key]) return sectionCache[key];
+    var html = provider();
+    if (!html) return [];
+    return splitSections(key, html);
+  }
+  function sectionBySlug(sections, slug) {
+    var n = parseInt(slug, 10);
+    for (var i = 0; i < sections.length; i++) if (sections[i].id === n) return sections[i];
+    return null;
+  }
+
+  /* ---------- quizzes ---------- */
+  var quizState = {};   // key "d15" -> { picked: {0: 2}, submitted: bool }
+  function quizKey(kind, id) { return kind + id; }
+  function getQuizState(key) {
+    if (!quizState[key]) quizState[key] = { picked: {}, submitted: false };
+    return quizState[key];
+  }
+  function renderQuiz(kind, id, questions) {
+    var key = quizKey(kind, id), st = getQuizState(key);
+    var score = quizScore(kind, id, questions);
+    var html = '<section class="quiz" data-quiz="' + key + '">';
+    html += '<div class="quiz-head"><span class="quiz-title">\u2753 Check your understanding</span>' +
+      (score ? '<span class="quiz-score ' + (score.right === score.total ? "perfect" : "") + '">' +
+        score.right + " / " + score.total + " correct</span>" : '<span class="quiz-score" id="score-' + key + '"></span>') +
+      "</div>";
+    questions.forEach(function (q, qi) {
+      html += '<div class="quiz-q"><div class="q-text">' + (qi + 1) + '. ' + q.q + '</div><div class="q-opts">';
+      q.a.forEach(function (opt, oi) {
+        var picked = st.picked[qi] === oi;
+        var cls = "q-opt" + (picked ? " picked" : "");
+        if (st.submitted) {
+          if (oi === q.correct) cls += " correct";
+          else if (picked) cls += " wrong";
+        }
+        html += '<button type="button" class="' + cls + '" data-q="' + qi + '" data-o="' + oi + '">' +
+          String.fromCharCode(65 + oi) + ". " + opt + "</button>";
+      });
+      html += "</div>";
+      if (st.submitted) html += '<div class="q-expl">' + q.expl + "</div>";
+      html += "</div>";
+    });
+    html += '<div class="quiz-actions">' +
+      (st.submitted
+        ? '<button type="button" class="icon-btn quiz-reset" data-quiz-key="' + key + '">Retry quiz</button>'
+        : '<button type="button" class="icon-btn quiz-submit" data-quiz-key="' + key + '">Check answers</button>') +
+      "</div></section>";
+    return html;
+  }
+  function bindQuiz(root) {
+    root.querySelectorAll(".quiz").forEach(function (quizEl) {
+      var key = quizEl.getAttribute("data-quiz");
+      quizEl.querySelectorAll(".q-opt").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var st = getQuizState(key);
+          if (st.submitted) return;
+          st.picked[btn.getAttribute("data-q")] = parseInt(btn.getAttribute("data-o"), 10);
+          route();   // re-render whole page (simple + consistent state)
+        });
+      });
+      var submit = quizEl.querySelector(".quiz-submit");
+      if (submit) submit.addEventListener("click", function () {
+        var st = getQuizState(key); st.submitted = true; persist(); route();
+      });
+      var reset = quizEl.querySelector(".quiz-reset");
+      if (reset) reset.addEventListener("click", function () {
+        quizState[key] = { picked: {}, submitted: false }; persist(); route();
+      });
+    });
+  }
+  function quizScore(kind, id, questions) {
+    var st = getQuizState(quizKey(kind, id));
+    if (!st.submitted) return null;
+    var right = 0;
+    questions.forEach(function (q, qi) { if (st.picked[qi] === q.correct) right++; });
+    return { right: right, total: questions.length };
+  }
+  /* persist quiz answers inside the same storage record */
+  function hydrateQuizState() {
+    if (state.quizzes) Object.keys(state.quizzes).forEach(function (k) { quizState[k] = state.quizzes[k]; });
+  }
+  function snapshotQuizState() {
+    state.quizzes = quizState;
+  }
 
   function bindCopyButtons(root) {
     root.querySelectorAll("pre code").forEach(function (code) {
@@ -115,8 +223,59 @@
     html += '<div style="margin-bottom:18px"><button class="icon-btn mark-btn" id="markComplete" style="border-color:' + (done ? "var(--green)" : "var(--border)") + ';color:' + (done ? "var(--green)" : "inherit") + '">' +
       (done ? "\u2713 Completed \u2014 click to unmark" : "Mark day as complete") + "</button></div>";
     html += objectivesHtml(d);
-    html += body ? body.html : '<div class="callout warning"><div class="co-title">Content missing</div><p>Lesson content for day ' + d.id + ' was not found.</p></div>';
+
+    if (body) {
+      // "In this topic" — subtopic subpage cards (every section becomes its own page)
+      var sections = splitSections("d" + d.id, body.html);
+      if (sections.length > 1) {
+        html += '<h2 class="subtopic-h">In this topic <span class="muted small">(' + sections.length + ' subtopics)</span></h2>';
+        html += '<div class="card-grid">';
+        sections.forEach(function (s) {
+          var mins = Math.max(3, Math.round((body.html.length / sections.length) / 900));
+          html += '<a class="card subtopic-card" href="#/day/' + d.id + '/s/' + s.id + '">' +
+            '<div class="card-top"><span class="card-num">Subtopic ' + s.id + " \u00B7 ~" + mins + " min</span></div>" +
+            "<h3>" + esc(s.title) + "</h3><p>Deep-dive page with focused explanations, code, and diagrams.</p></a>";
+        });
+        html += "</div>";
+      }
+
+      html += body.html;
+
+      // quiz at the end of the lesson (score shows in the quiz header)
+      if (body.quiz && body.quiz.length) {
+        html += renderQuiz("d", d.id, body.quiz);
+      }
+      if (!body.quiz) {
+        html += '<div class="callout warning"><div class="co-title">Quiz coming</div><p>Checkpoint quiz for this day is being written.</p></div>';
+      }
+    } else {
+      html += '<div class="callout warning"><div class="co-title">Content missing</div><p>Lesson content for day ' + d.id + ' was not found.</p></div>';
+    }
     html += pagerHtml(d);
+    return html;
+  }
+
+  function renderDaySubtopic(d, slug) {
+    var body = content[d.id];
+    var sections = body ? splitSections("d" + d.id, body.html) : [];
+    var s = sectionBySlug(sections, slug);
+    if (!s) return '<div class="callout danger"><div class="co-title">Not found</div><p>No such subtopic. <a href="#/day/' + d.id + '">Back to Day ' + d.id + '</a>.</p></div>';
+    var prev = sections[sections.indexOf(s) - 1], next = sections[sections.indexOf(s) + 1];
+    var lvl = '<span class="badge ' + d.level + '">' + d.level + "</span>";
+    var html = '<div class="eyebrow">Day ' + d.id + " \u00B7 Subtopic " + s.id + " of " + (sections.length - 1) + " \u00B7 " + lvl + "</div>";
+    html += "<h1>" + esc(s.title) + "</h1>";
+    html += '<p class="lede">' + esc(d.title) + " &mdash; focused subtopic page.</p>";
+    html += s.html;
+    if (body.quiz && body.quiz.length) {
+      html += renderQuiz("d", d.id, body.quiz);
+    }
+    var nav = '<div class="pager">';
+    nav += prev ? '<a class="prev" href="#/day/' + d.id + '/s/' + prev.id + '"><div class="dir">\u2190 Subtopic</div><div class="pt">' + esc(prev.title) + "</div></a>"
+               : '<a class="prev" href="#/day/' + d.id + '"><div class="dir">\u2190 Back</div><div class="pt">Day ' + d.id + " overview</div></a>";
+    nav += next ? '<a class="next" href="#/day/' + d.id + '/s/' + next.id + '"><div class="dir">Subtopic \u2192</div><div class="pt">' + esc(next.title) + "</div></a>"
+               : '<a class="next" href="#/day/' + d.id + '"><div class="dir">Done \u2192</div><div class="pt">Back to Day ' + d.id + "</div></a>";
+    nav += "</div>";
+    html += nav;
     return html;
   }
 
@@ -200,10 +359,36 @@
   function route() {
     var hash = location.hash || "#/home";
     var m = hash.match(/^#\/day\/(\d+)$/);
+    var ms = hash.match(/^#\/day\/(\d+)\/s\/(\d+)$/);
+    var mg = hash.match(/^#\/(frameworks|objects)\/s\/(\d+)$/);
     var el = document.getElementById("content");
     var current = "home";
 
-    if (m) {
+    if (ms) {
+      var ds = dayById(parseInt(ms[1], 10));
+      if (ds) {
+        current = "day" + ds.id;
+        el.innerHTML = renderDaySubtopic(ds, ms[2]);
+      } else { el.innerHTML = '<div class="callout danger"><div class="co-title">Not found</div><p>No such day.</p></div>'; }
+    } else if (mg) {
+      var prov = mg[1] === "frameworks" ? frameworks : objects;
+      var secs = splitSections(mg[1], prov.html || "");
+      var s = sectionBySlug(secs, mg[2]);
+      current = mg[1];
+      if (s) {
+        var prevS = secs[secs.indexOf(s) - 1], nextS = secs[secs.indexOf(s) + 1];
+        var h = '<div class="eyebrow">Deep Dive \u00B7 Subtopic ' + s.id + "</div><h1>" + esc(s.title) + "</h1>" + s.html;
+        h += '<div class="pager">';
+        h += prevS ? '<a class="prev" href="#/' + mg[1] + '/s/' + prevS.id + '"><div class="dir">\u2190 Subtopic</div><div class="pt">' + esc(prevS.title) + "</div></a>"
+                   : '<a class="prev" href="#/' + mg[1] + '"><div class="dir">\u2190 Back</div><div class="pt">' + esc(prov.title || "Guide") + " overview</div></a>";
+        h += nextS ? '<a class="next" href="#/' + mg[1] + '/s/' + nextS.id + '"><div class="dir">Subtopic \u2192</div><div class="pt">' + esc(nextS.title) + "</div></a>"
+                   : '<a class="next" href="#/' + mg[1] + '"><div class="dir">Done \u2192</div><div class="pt">Back to ' + esc(prov.title || "guide") + "</div></a>";
+        h += "</div>";
+        el.innerHTML = h;
+      } else {
+        el.innerHTML = '<div class="callout danger"><div class="co-title">Not found</div><p>No such subtopic. <a href="#/' + mg[1] + '">Back to the guide</a>.</p></div>';
+      }
+    } else if (m) {
       var d = dayById(parseInt(m[1], 10));
       if (d) {
         current = "day" + d.id;
@@ -231,6 +416,7 @@
     buildNav(current);
     updateProgressChip();
     bindCopyButtons(el);
+    bindQuiz(el);
     if (!m) el.scrollTop = 0;
     window.scrollTo(0, 0);
     closeSidebar();
@@ -250,6 +436,7 @@
 
   /* ---------- init ---------- */
   function init() {
+    hydrateQuizState();
     applyTheme();
     var t = document.getElementById("themeToggle");
     if (t) t.addEventListener("click", toggleTheme);

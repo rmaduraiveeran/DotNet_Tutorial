@@ -92,5 +92,53 @@ Console.WriteLine(query.Count());         // 3, not 2
   <li>Deferred execution means queries are live; snapshot with <code>ToList()</code>.</li>
   <li>Same syntax over lists today, databases on Day 17.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Implement <code>movingAverage(source, window)</code> with <code>Aggregate</code> &mdash; no loops allowed.</li><li>Use <code>Aggregate</code> to build a comma-separated string without <code>StringBuilder</code> (and explain why you would not do this in production).</li><li>GroupBy two keys with a tuple (<code>GroupBy(x =&gt; (x.A, x.B))</code>) and project a nested summary.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "LINQ's Where + Select are…",
+      "a": [
+        "Executed immediately",
+        "Deferred — a recipe run on enumeration",
+        "Parallel by default",
+        "SQL-only"
+      ],
+      "correct": 1,
+      "expl": "Queries are live views; ToList snapshots them."
+    },
+    {
+      "q": "FirstOrDefault returns…",
+      "a": [
+        "An exception when empty",
+        "null/default when nothing matches",
+        "The first element always",
+        "A Task"
+      ],
+      "correct": 1,
+      "expl": "First throws on empty; FirstOrDefault yields null — the #1 null-crash source."
+    },
+    {
+      "q": "GroupBy + Select(g => new { g.Key, Sum = g.Sum(...) }) produces…",
+      "a": [
+        "A flat list",
+        "Per-group aggregates",
+        "A sorted list",
+        "A cartesian product"
+      ],
+      "correct": 1,
+      "expl": "GroupBy buckets, then you aggregate each bucket."
+    },
+    {
+      "q": "Storing an IEnumerable<T> from LINQ and enumerating it 3 times…",
+      "a": [
+        "Runs the query 3 times",
+        "Caches automatically",
+        "Is a compile error",
+        "Is faster than ToList"
+      ],
+      "correct": 0,
+      "expl": "Multiple enumeration re-executes; materialize once with ToList/ToArray."
+    }
+  ]
+
 };

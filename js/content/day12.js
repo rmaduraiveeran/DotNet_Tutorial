@@ -90,5 +90,53 @@ var dto = new OrderDto(7, "Ada", 129.90m);
   <li>Records are the DTO sweet spot.</li>
   <li>Design schemas for versioning: add optional fields, never rename.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add round-trip JSON pretty-printing: read a file, reformat with 4-space indent.</li><li>Implement <code>static T? LoadOrCreate&lt;T&gt;(string path)</code> that survives missing files and corrupt JSON.</li><li>Serialize a <code>Dictionary&lt;DateTime, List&lt;string&gt;&gt;</code> and back &mdash; then make DateTime round-trip exactly.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Reading a 2GB log file — correct approach:",
+      "a": [
+        "File.ReadAllTextAsync",
+        "Stream line-by-line with File.ReadLinesAsync",
+        "byte[] buffer all at once",
+        "String interpolation"
+      ],
+      "correct": 1,
+      "expl": "Streams keep memory constant regardless of file size."
+    },
+    {
+      "q": "JsonPropertyName(\"temp_c\") is used to…",
+      "a": [
+        "Encrypt fields",
+        "Map a C# property to a JSON name",
+        "Ignore a property",
+        "Format numbers"
+      ],
+      "correct": 1,
+      "expl": "Attribute-level contract control for wire formats."
+    },
+    {
+      "q": "Records make good DTOs because…",
+      "a": [
+        "They serialize faster",
+        "Immutable + value equality + positional constructors",
+        "They are smaller",
+        "They validate themselves"
+      ],
+      "correct": 1,
+      "expl": "Perfect fit for wire contracts — plus with-cloning for updates."
+    },
+    {
+      "q": "Designing for schema evolution, you should…",
+      "a": [
+        "Rename fields aggressively",
+        "Add optional fields, never rename",
+        "Version via new tables only",
+        "Avoid JSON"
+      ],
+      "correct": 1,
+      "expl": "Optional additions keep old payloads deserializing."
+    }
+  ]
+
 };

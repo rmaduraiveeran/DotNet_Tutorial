@@ -273,5 +273,53 @@ dotnet ef migrations script --idempotent -o deploy.sql
   <li>DbContext is scoped and not thread-safe; one per request, factories for background work.</li>
   <li>Optimistic concurrency with rowversion + <code>DbUpdateConcurrencyException</code>; transactions via the database API; interceptors for cross-cutting.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Provoke a cartesian-explosion with two <code>Include</code>d collections, then fix with <code>AsSplitQuery</code> &mdash; log both SQLs.</li><li>Add a global query filter (<code>HasQueryFilter(t =&gt; !t.IsDeleted)</code>) and a <code>IgnoreQueryFilters()</code> path for admins.</li><li>Implement a <code>DbCommandInterceptor</code> that logs any query taking &gt; 100ms.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "The N+1 problem is…",
+      "a": [
+        "A SQL syntax error",
+        "One query per row from lazy-loading in loops",
+        "An index issue",
+        "Too many joins"
+      ],
+      "correct": 1,
+      "expl": "Fix with Include, split queries, or projections."
+    },
+    {
+      "q": "AsNoTracking() matters because tracking…",
+      "a": [
+        "Encrypts data",
+        "Keeps snapshots for change detection — wasted on read-only queries",
+        "Blocks indexes",
+        "Is required for LINQ"
+      ],
+      "correct": 1,
+      "expl": "Reads skip the change tracker for speed and less memory."
+    },
+    {
+      "q": "DbContext lifetime should be…",
+      "a": [
+        "Singleton",
+        "Scoped per request",
+        "Transient per query",
+        "Static"
+      ],
+      "correct": 1,
+      "expl": "Scoped: one per request, not thread-safe, disposed at request end."
+    },
+    {
+      "q": "[Timestamp] byte[] RowVersion gives you…",
+      "a": [
+        "Full backups",
+        "Optimistic concurrency via WHERE version checks",
+        "Auditing",
+        "Encryption"
+      ],
+      "correct": 1,
+      "expl": "EF throws DbUpdateConcurrencyException when the version moved."
+    }
+  ]
+
 };

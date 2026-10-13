@@ -210,5 +210,53 @@ app.MapPut("/orders/{id:int}", async (int id, UpdateOrderRequest req,
   <li>CORS before auth; version before you break; paginate and clamp everything.</li>
   <li>ETags/output caching are built in &mdash; use the platform before writing your own.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add <code>If-Match</code>/<code>ETag</code> support to <code>PUT /tasks/{id}</code> returning 412 on mismatch.</li><li>Implement an idempotency-key middleware: same key &rarr; replay the stored response (in a <code>ConcurrentDictionary</code>).</li><li>Add a v2 endpoint where status becomes an enum-as-string, and run both versions side by side.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "POST /api/orders that creates order 42 should return…",
+      "a": [
+        "200 with the object",
+        "201 with a Location: /api/orders/42 header",
+        "204",
+        "302"
+      ],
+      "correct": 1,
+      "expl": "201 + Location lets clients immediately GET the new resource."
+    },
+    {
+      "q": "Entities should not cross the API boundary because of…",
+      "a": [
+        "Performance",
+        "Mass-assignment attacks, data leaks, and schema coupling",
+        "JSON size",
+        "Compiler rules"
+      ],
+      "correct": 1,
+      "expl": "DTOs shape the contract; entities stay inside."
+    },
+    {
+      "q": "A rule like 'total quantity across lines ≤ 10000' belongs in…",
+      "a": [
+        "A DataAnnotation on Lines",
+        "FluentValidation cross-field rule or service logic",
+        "The route constraint",
+        "A comment"
+      ],
+      "correct": 1,
+      "expl": "Cross-field rules need validator classes or domain services."
+    },
+    {
+      "q": "Stale ETag on a PUT should return…",
+      "a": [
+        "400",
+        "412 Precondition Failed",
+        "409",
+        "500"
+      ],
+      "correct": 1,
+      "expl": "412 tells the client its cached version is outdated; 409 is for state conflicts."
+    }
+  ]
+
 };

@@ -186,5 +186,53 @@ jobs:
   <li>Rate limiting + structured logging + health endpoints are part of "done", not polish.</li>
   <li>This project is a job-interview artifact &mdash; keep improving it.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add an integration test asserting 429 after 100 rapid requests.</li><li>Add a CI badge to the README using the workflow&rsquo;s status URL.</li><li>Swap SQLite &rarr; PostgreSQL in a docker-compose and re-run the suite unchanged.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "WebApplicationFactory<Program> lets integration tests…",
+      "a": [
+        "Skip DI",
+        "Host the real app in-memory with routed HTTP calls",
+        "Mock the DB only",
+        "Avoid auth"
+      ],
+      "correct": 1,
+      "expl": "Real pipeline, real middleware, no network port."
+    },
+    {
+      "q": "In a layered solution, the Domain project…",
+      "a": [
+        "References the API",
+        "Has zero project dependencies — entities + interfaces only",
+        "Owns EF Core",
+        "Contains controllers"
+      ],
+      "correct": 1,
+      "expl": "Dependencies point inward; the API composes the domain."
+    },
+    {
+      "q": "Rate limiting should be partitioned by…",
+      "a": [
+        "IP always",
+        "The authenticated user (sub claim) when available",
+        "Random",
+        "User agent"
+      ],
+      "correct": 1,
+      "expl": "IP punishes NAT offices; per-user is fair and spoof-resistant."
+    },
+    {
+      "q": "CI should fail the build on…",
+      "a": [
+        "Nothing",
+        "Warnings (--warnaserror) and failed tests",
+        "Style only",
+        "Slow tests"
+      ],
+      "correct": 1,
+      "expl": "Warnings-as-errors keeps debt from accumulating."
+    }
+  ]
+
 };

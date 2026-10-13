@@ -227,5 +227,53 @@ public void TaskList_RendersRows_AndRaisesComplete()
   <li>Forms via EditForm validate without JS; JS interop exists for when you truly need it.</li>
   <li>bUnit makes components unit-testable like everything else in C#.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add <code>&lt;Virtualize&gt;</code> to the list and test with 10,000 rows &mdash; DOM stays small.</li><li>Implement a <code>Timer</code>-driven auto-refresh guarded by <code>StateHasChanged</code> + <code>IDisposable</code>.</li><li>Swap a component to <code>InteractiveWebAssembly</code> and compare Network tab payloads.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Blazor Server interactivity means…",
+      "a": [
+        "JS in the browser",
+        "C# on the server, UI events over a SignalR circuit",
+        "Static HTML",
+        "WebSockets only"
+      ],
+      "correct": 1,
+      "expl": "The circuit carries events in and render diffs out."
+    },
+    {
+      "q": "InteractiveAuto mode…",
+      "a": [
+        "Picks static always",
+        "Serves Server first, downloads WASM, then switches",
+        "Requires .NET 9",
+        "Is deprecated"
+      ],
+      "correct": 1,
+      "expl": "Fast first paint + WASM performance after load."
+    },
+    {
+      "q": "Data flows ___ and events flow ___ in Blazor components.",
+      "a": [
+        "up / down",
+        "down / up",
+        "sideways / nowhere",
+        "Both down"
+      ],
+      "correct": 1,
+      "expl": "[Parameter]s down, EventCallbacks up — the unidirectional contract."
+    },
+    {
+      "q": "EditForm + DataAnnotationsValidator…",
+      "a": [
+        "Require JavaScript",
+        "Validate client- and server-side from the same attributes",
+        "Only work on WASM",
+        "Replace models"
+      ],
+      "correct": 1,
+      "expl": "Same rules as your API models — one validation contract."
+    }
+  ]
+
 };

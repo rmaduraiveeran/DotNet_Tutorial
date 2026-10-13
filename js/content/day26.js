@@ -103,5 +103,53 @@ services:
   <li>OpenTelemetry instruments once, exports to any backend.</li>
   <li>Config through environment; one image, many environments.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add a <code>Prometheus</code> scraping endpoint (<code>MapPrometheusScrapingEndpoint</code>) and graph request latency.</li><li>Make the container run as non-root with a read-only filesystem &mdash; fix what breaks.</li><li>Add <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> to compose with a Jaeger all-in-one container; trace one request end-to-end.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Multi-stage Dockerfiles exist to…",
+      "a": [
+        "Look advanced",
+        "Build with the SDK image, ship only the small runtime image",
+        "Cache layers",
+        "Support Windows"
+      ],
+      "correct": 1,
+      "expl": "~700MB SDK at build; ~110MB aspnet runtime in the final image."
+    },
+    {
+      "q": "Liveness vs readiness probes:",
+      "a": [
+        "Identical",
+        "Liveness = restart me; readiness = stop sending traffic",
+        "Readiness restarts",
+        "Only K8s uses one"
+      ],
+      "correct": 1,
+      "expl": "Failing readiness ≠ crash loop; failing liveness = restart."
+    },
+    {
+      "q": "OpenTelemetry gives you…",
+      "a": [
+        "Logs only",
+        "Vendor-neutral traces + metrics + logs with one instrumentation API",
+        "Alerts",
+        "Dashboards"
+      ],
+      "correct": 1,
+      "expl": "Instrument once, export to any backend."
+    },
+    {
+      "q": "12-factor config means…",
+      "a": [
+        "appsettings.json in the image",
+        "Environment variables/secret stores injected at deploy time",
+        "Hardcoded defaults",
+        "Config in code"
+      ],
+      "correct": 1,
+      "expl": "One image, many environments — only env differs."
+    }
+  ]
+
 };

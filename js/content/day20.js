@@ -217,5 +217,53 @@ var plain = provider.Unprotect(protectedBlob);
   <li>Delegate login to an IdP (OIDC) when MFA/SSO/enterprise rules are in play.</li>
   <li>Data Protection underpins cookies/anti-forgery; persist keys when clustering.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Implement refresh-token rotation: one-time-use refresh tokens, reuse = revoke all sessions.</li><li>Add a <code>MinimumAgeRequirement</code> (claim dob) with a handler + test.</li><li>Log all failed authorization attempts via an <code>IAuthorizationHandler</code> (middleware-free).</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Authentication vs authorization:",
+      "a": [
+        "Same thing",
+        "AuthN = who you are; AuthZ = what you may do",
+        "AuthZ first",
+        "Only JWT does both"
+      ],
+      "correct": 1,
+      "expl": "UseAuthentication populates the principal; UseAuthorization evaluates it."
+    },
+    {
+      "q": "Short-lived access tokens + refresh tokens exist to…",
+      "a": [
+        "Save bandwidth",
+        "Limit stolen-token blast radius while keeping sessions smooth",
+        "Avoid HTTPS",
+        "Reduce DB load"
+      ],
+      "correct": 1,
+      "expl": "Access 5-15 min; refresh revocable server-side."
+    },
+    {
+      "q": "'May this user edit THIS task?' is answered by…",
+      "a": [
+        "RequireRole",
+        "A resource-based IAuthorizationHandler",
+        "A claim check",
+        "The router"
+      ],
+      "correct": 1,
+      "expl": "Resource-based handlers receive the actual entity."
+    },
+    {
+      "q": "401 vs 403:",
+      "a": [
+        "Same meaning",
+        "401 = not authenticated; 403 = authenticated but not allowed",
+        "401 = forbidden",
+        "403 = not found"
+      ],
+      "correct": 1,
+      "expl": "Anonymous → 401; wrong-owner → 403."
+    }
+  ]
+
 };

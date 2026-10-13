@@ -97,5 +97,53 @@ public class ReportGenerator : IDisposable
   <li><code>using</code> gives deterministic resource cleanup.</li>
   <li>Expected failures are results; exceptional failures are exceptions.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Implement <code>static T Retry&lt;T&gt;(Func&lt;T&gt; f, int times)</code> with exponential backoff via <code>Thread.Sleep</code>.</li><li>Make a class both <code>IDisposable</code> and <code>IAsyncDisposable</code> correctly (both paths, shared core).</li><li>Write a test proving <code>InnerException</code> survives two levels of wrapping.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Why is bare 'throw;' better than 'throw ex;'?",
+      "a": [
+        "It is faster",
+        "It preserves the original stack trace",
+        "It logs automatically",
+        "It retries"
+      ],
+      "correct": 1,
+      "expl": "throw ex resets the stack trace, hiding where the error came from."
+    },
+    {
+      "q": "using (var s = File.OpenRead(...)) guarantees…",
+      "a": [
+        "The file is read fully",
+        "Dispose runs even on exception",
+        "No exceptions",
+        "Async I/O"
+      ],
+      "correct": 1,
+      "expl": "using compiles to try/finally around Dispose — deterministic cleanup."
+    },
+    {
+      "q": "Empty catch (Exception) { } is bad because it…",
+      "a": [
+        "Is slow",
+        "Swallows bugs silently",
+        "Breaks the GC",
+        "Is deprecated"
+      ],
+      "correct": 1,
+      "expl": "Failures vanish; you debug symptoms instead of causes."
+    },
+    {
+      "q": "'Cart is empty' should typically be…",
+      "a": [
+        "An exception",
+        "A Result/return value — expected business state",
+        "An environment exit",
+        "A log-only event"
+      ],
+      "correct": 1,
+      "expl": "Expected outcomes are values; exceptions are for exceptional paths."
+    }
+  ]
+
 };

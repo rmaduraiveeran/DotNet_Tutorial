@@ -117,5 +117,53 @@ public class AlertServiceTests
   <li>Depend on interfaces so dependencies can be faked.</li>
   <li>The pyramid: many unit, some integration, few E2E.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add a <code>[Theory]</code> with 5 <code>InlineData</code> cases for edge IDs (0, -1, int.MaxValue, duplicates).</li><li>Extract a <code>TimeProvider</code> abstraction, fake it in tests, and make <code>CreatedOn</code> deterministic.</li><li>Write a test that fails only on a leap-day date &mdash; then make it pass.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "AAA in testing stands for…",
+      "a": [
+        "Assert-Act-Arrange",
+        "Arrange-Act-Assert",
+        "Async-Await-Assert",
+        "Arrange-Analyze-Approve"
+      ],
+      "correct": 1,
+      "expl": "Arrange the world, act once, assert the outcome."
+    },
+    {
+      "q": "[Theory] differs from [Fact] because it…",
+      "a": [
+        "Runs faster",
+        "Is data-driven with InlineData inputs",
+        "Needs mocking",
+        "Is for integration tests"
+      ],
+      "correct": 1,
+      "expl": "One test body, many cases."
+    },
+    {
+      "q": "Prefer fakes over mocks because fakes…",
+      "a": [
+        "Are shorter",
+        "Test behavior through real (lightweight) implementations",
+        "Are always faster",
+        "Need no setup"
+      ],
+      "correct": 1,
+      "expl": "Over-mocking asserts implementation, breaking on refactors."
+    },
+    {
+      "q": "The test pyramid says…",
+      "a": [
+        "Mostly E2E",
+        "Many unit, some integration, few E2E",
+        "Equal amounts",
+        "Only unit tests"
+      ],
+      "correct": 1,
+      "expl": "Fast tests dominate; slow ones guard the seams."
+    }
+  ]
+
 };

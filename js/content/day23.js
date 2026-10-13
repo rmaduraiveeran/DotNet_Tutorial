@@ -93,5 +93,53 @@ builder.Services.AddTransient&lt;TasksPage&gt;();</code></pre></div>
   <li>Platform capabilities arrive as injectable abstractions.</li>
   <li>Blazor Hybrid is the escape hatch when you want web UI in a native shell.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add a <code>Behavior</code> that animates a border on task completion.</li><li>Use <code>Shell</code> routes with query parameters to pass a task ID to the detail page.</li><li>Guard all device APIs behind an <code>IDeviceService</code> &mdash; then unit-test the VM without any device.</li></ul>
+`,
+  quiz: [
+    {
+      "q": ".NET MAUI maps your XAML to…",
+      "a": [
+        "Web views",
+        "Native controls per platform (WinUI, Android, iOS, Catalyst)",
+        "Bitmaps",
+        "Blazor components"
+      ],
+      "correct": 1,
+      "expl": "Real platform UI, not a browser in a box."
+    },
+    {
+      "q": "The MVVM payoff on MAUI is…",
+      "a": [
+        "Smaller apps",
+        "ViewModels shared unchanged across all platforms",
+        "No XAML",
+        "No DI"
+      ],
+      "correct": 1,
+      "expl": "One VM, four UIs — that is why Day 22 came first."
+    },
+    {
+      "q": "Device features (camera, files) are consumed via…",
+      "a": [
+        "Static singletons",
+        "Injectable abstractions (IConnectivity, IFileSaver)",
+        "P/Invoke",
+        "Shell commands"
+      ],
+      "correct": 1,
+      "expl": "Platform services behind interfaces — testable and swappable."
+    },
+    {
+      "q": "Blazor Hybrid means…",
+      "a": [
+        "JS + C#",
+        "Blazor components inside a native MAUI shell",
+        "WASM on desktop",
+        "Electron"
+      ],
+      "correct": 1,
+      "expl": "Web UI skills, native app packaging."
+    }
+  ]
+
 };

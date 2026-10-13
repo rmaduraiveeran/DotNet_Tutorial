@@ -167,6 +167,33 @@ td code{white-space:nowrap}
 .mermaid{background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;padding:16px;margin:0 0 22px;overflow-x:auto;text-align:center}
 .mermaid svg{max-width:100%}
 
+/* quiz */
+.quiz{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin:26px 0}
+.quiz-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.quiz-title{font-weight:700;font-size:1rem}
+.quiz-score{font-size:.8rem;font-weight:700;color:var(--text-soft);background:var(--accent-soft);border-radius:999px;padding:3px 12px}
+.quiz-score.perfect{background:#e7f8f1;color:#0b7a54}
+html[data-theme="dark"] .quiz-score.perfect{background:#0d2f24;color:#5ee0b0}
+.quiz-q{margin-bottom:16px}
+.quiz-q .q-text{font-weight:600;font-size:.94rem;margin-bottom:8px}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.q-opt{text-align:left;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:.86rem;cursor:pointer;color:var(--text);line-height:1.45;transition:border-color .12s, background .12s}
+.q-opt:hover{border-color:var(--accent)}
+.q-opt.picked{border-color:var(--accent);background:var(--accent-soft)}
+.q-opt.correct{border-color:var(--green);background:#e7f8f1;color:#0b7a54;font-weight:600}
+.q-opt.wrong{border-color:var(--red);background:#fdecec;color:#8f2020}
+html[data-theme="dark"] .q-opt.correct{background:#0d2f24;color:#5ee0b0}
+html[data-theme="dark"] .q-opt.wrong{background:#2e1414;color:#f0a8a8}
+.q-expl{font-size:.84rem;color:var(--text-soft);background:var(--bg);border-left:3px solid var(--accent);border-radius:6px;padding:8px 12px;margin-top:8px}
+.quiz-actions{margin-top:14px}
+
+/* subtopic cards + subpages */
+.subtopic-h{margin-top:30px}
+.subtopic-card h3{font-size:.95rem;line-height:1.35}
+.crumbs{font-size:.8rem;color:var(--text-faint);margin-bottom:10px}
+.crumbs a{color:var(--accent-text);text-decoration:none}
+.crumbs a:hover{text-decoration:underline}
+
 /* footer */
 .site-footer{border-top:1px solid var(--border);background:var(--bg-alt);padding:22px 20px;text-align:center;font-size:.84rem;color:var(--text-soft)}
 .site-footer a{color:var(--accent-text)}

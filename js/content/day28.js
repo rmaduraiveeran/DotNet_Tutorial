@@ -110,5 +110,53 @@ var answer = await client.GetResponseAsync(
   <li>RAG = chunk &rarr; embed &rarr; retrieve &rarr; answer with context.</li>
   <li>Log every AI call: tokens, latency, and cost are operational data.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add streaming responses (<code>GetStreamingResponseAsync</code>) rendering token-by-token in a Blazor UI.</li><li>Implement tool-calling with parallel functions (weather + time in one prompt).</li><li>Swap OpenAI &rarr; Ollama via config only &mdash; prove the abstraction by zero code changes.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Programming against IChatClient means…",
+      "a": [
+        "Vendor lock-in",
+        "Provider-agnostic chat/embeddings swappable via config",
+        "No logging",
+        "Free tokens"
+      ],
+      "correct": 1,
+      "expl": "Same abstraction for OpenAI, Azure, Ollama, local models."
+    },
+    {
+      "q": "Function calling lets the model…",
+      "a": [
+        "Write C# files",
+        "Request execution of your typed C# methods and use results",
+        "Compile code",
+        "Access the DB directly"
+      ],
+      "correct": 1,
+      "expl": "UseFunctionInvocation loops model-tool-result automatically."
+    },
+    {
+      "q": "RAG's core idea is…",
+      "a": [
+        "Bigger models",
+        "Retrieve relevant chunks, ground the answer in them",
+        "Fine-tuning",
+        "Caching"
+      ],
+      "correct": 1,
+      "expl": "Embed → store → search top-k → answer with context."
+    },
+    {
+      "q": "Vector similarity search finds…",
+      "a": [
+        "Exact matches",
+        "Semantically similar content via embedding distance",
+        "Duplicates only",
+        "Keywords"
+      ],
+      "correct": 1,
+      "expl": "Meaning-based retrieval, not string equality."
+    }
+  ]
+
 };

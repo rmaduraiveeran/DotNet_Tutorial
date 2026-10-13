@@ -89,5 +89,53 @@ Console.WriteLine(reply.Total);</code></pre></div>
   <li>Retry + circuit breaker + timeout on every remote call, no exceptions.</li>
   <li>Database-per-service means eventual consistency &mdash; design for it up front.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add deadline propagation: <code>CancellationToken</code> flowing from HTTP &rarr; gRPC call &rarr; DB query.</li><li>Swap resilience policies per environment (dev: no retry; test: 1 retry, log).</li><li>Add a health check in Reports.Api that pings Tasks.Api&rsquo;s gRPC <code>/health</code>.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Before splitting into microservices, prefer…",
+      "a": [
+        "Immediate split",
+        "A modular monolith with strict internal boundaries",
+        "Serverless",
+        "A shared database"
+      ],
+      "correct": 1,
+      "expl": "Distributed systems trade easy consistency for autonomy — split only under real pressure."
+    },
+    {
+      "q": "gRPC beats REST internally because of…",
+      "a": [
+        "JSON",
+        "Binary protobuf + HTTP/2 + generated typed contracts",
+        "Browsers",
+        "Simplicity"
+      ],
+      "correct": 1,
+      "expl": "Smaller, faster, strictly versioned .proto contracts."
+    },
+    {
+      "q": "Retry + circuit breaker + timeout…",
+      "a": [
+        "Are optional",
+        "Belong on every remote call via the resilience handler",
+        "Only for REST",
+        "Replace testing"
+      ],
+      "correct": 1,
+      "expl": "Assume failure; fail fast when down, retry transient blips."
+    },
+    {
+      "q": "Database-per-service means…",
+      "a": [
+        "Shared tables",
+        "Eventual consistency designed in from day one",
+        "No transactions",
+        "One DB per table"
+      ],
+      "correct": 1,
+      "expl": "Autonomy over ACID — sagas and events coordinate changes."
+    }
+  ]
+
 };

@@ -86,5 +86,53 @@ internal class Program
   <li>Modern C# hides the <code>Main</code> boilerplate with top-level statements.</li>
   <li>The csproj is small and declarative &mdash; the SDK infers the rest.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add a <code>--verbose</code> flag printing assembly location + runtime version side by side.</li><li>Create a second project in the same solution and reference it (<code>dotnet add reference</code>) &mdash; call a method across projects.</li><li>Run with <code>dotnet run -- --help</code> and print usage when args contain <code>--help</code>.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "What does the .NET SDK include that the runtime alone does not?",
+      "a": [
+        "The GC",
+        "The compiler and CLI tools",
+        "Kestrel",
+        "Entity Framework"
+      ],
+      "correct": 1,
+      "expl": "The SDK bundles Roslyn, MSBuild, and the dotnet CLI; the runtime only executes already-compiled programs."
+    },
+    {
+      "q": "Which command compiles AND runs a console project?",
+      "a": [
+        "dotnet start",
+        "dotnet execute",
+        "dotnet run",
+        "dotnet go"
+      ],
+      "correct": 2,
+      "expl": "dotnet run builds (if needed) and executes in one step."
+    },
+    {
+      "q": "Top-level statements in Program.cs mean…",
+      "a": [
+        "The compiler skips compilation",
+        "No Main method is needed",
+        "The app runs faster",
+        "Globals are allowed"
+      ],
+      "correct": 1,
+      "expl": "The compiler synthesizes Program.Main around your statements — same IL as the explicit form."
+    },
+    {
+      "q": "Source code is compiled into which intermediate form?",
+      "a": [
+        "Machine code directly",
+        "Java bytecode",
+        "IL inside assemblies",
+        "LLVM IR"
+      ],
+      "correct": 2,
+      "expl": "Roslyn emits IL + metadata into .dll assemblies; the CLR JITs IL to machine code at run time."
+    }
+  ]
+
 };

@@ -232,5 +232,53 @@ else
   <li><code>MapGroup</code> + constraints + <code>TypedResults</code> + ProblemDetails = APIs that self-document.</li>
   <li>Secrets: user-secrets in dev, Key Vault/env vars in prod, never in appsettings.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add a <code>UseMiddleware</code> class that returns 429 after 5 requests per minute (store counts in a <code>ConcurrentDictionary</code>).</li><li>Write an <code>IExceptionHandler</code> for <code>DivideByZeroException</code> returning 400 (absurd, but proves the pipeline).</li><li>Wire <code>app.MapHealthChecks("/health")</code> and hit it from a loop &mdash; watch concurrency behavior.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "The correct middleware order is…",
+      "a": [
+        "Auth → exceptions → routing",
+        "Exception handler → HTTPS → routing → auth → endpoints",
+        "Routing first always",
+        "Endpoints before middleware"
+      ],
+      "correct": 1,
+      "expl": "ExceptionHandler first (catches all), endpoints last."
+    },
+    {
+      "q": "UseCors must come before UseAuthentication because…",
+      "a": [
+        "Performance",
+        "Preflight OPTIONS requests carry no auth token",
+        "Cookies need it",
+        "It is alphabetical"
+      ],
+      "correct": 1,
+      "expl": "Preflights must succeed pre-auth or every cross-origin call fails."
+    },
+    {
+      "q": "TypedResults vs Results — TypedResults…",
+      "a": [
+        "Are shorter",
+        "Preserve response types for OpenAPI + tests",
+        "Are deprecated",
+        "Skip validation"
+      ],
+      "correct": 1,
+      "expl": "Concrete return types document themselves in the contract."
+    },
+    {
+      "q": "Behind Nginx, your app sees the proxy IP. Fix:",
+      "a": [
+        "UseHttpsRedirection",
+        "UseForwardedHeaders with KnownProxies",
+        "UseHsts",
+        "Disable logging"
+      ],
+      "correct": 1,
+      "expl": "Forwarded headers restore the real client IP/scheme — restricted to trusted proxies."
+    }
+  ]
+
 };

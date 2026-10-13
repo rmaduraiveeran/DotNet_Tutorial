@@ -115,5 +115,53 @@ if (reply.Confidence &lt; 0.6)   // business rule on model output &mdash; like a
   <li>Parse and validate model output like any untrusted DTO.</li>
   <li>Prompts are code: version them, eval them, configure them.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add a golden-set runner: xUnit test looping JSONL cases through the prompt, asserting citation presence.</li><li>Implement prompt A/B: two variants, log which returns better eval scores over 20 runs.</li><li>Add response caching keyed on (prompt-hash, model, temperature).</li></ul>
+`,
+  quiz: [
+    {
+      "q": "The five prompt parts are…",
+      "a": [
+        "Hello/body/end",
+        "Role, task, context, rules, response format",
+        "Q/A only",
+        "System/user/assistant"
+      ],
+      "correct": 1,
+      "expl": "Structure beats cleverness; each part is testable."
+    },
+    {
+      "q": "An explicit 'I don't know' path…",
+      "a": [
+        "Weakens prompts",
+        "Reduces hallucination by giving a safe failure mode",
+        "Is unnecessary",
+        "Breaks JSON"
+      ],
+      "correct": 1,
+      "expl": "Silence beats invention — define the fallback."
+    },
+    {
+      "q": "Model JSON output should be…",
+      "a": [
+        "Trusted",
+        "Parsed into records and validated like any untrusted DTO",
+        "Evaled",
+        "Logged only"
+      ],
+      "correct": 1,
+      "expl": "Defensive parsing + confidence thresholds = production safety."
+    },
+    {
+      "q": "Temperature 0.2 suits ___; 0.9 suits ___.",
+      "a": [
+        "Chat / extraction",
+        "Factual extraction / creative naming",
+        "Everything / nothing",
+        "Code / math"
+      ],
+      "correct": 1,
+      "expl": "Low = deterministic and factual; high = diverse and creative."
+    }
+  ]
+
 };

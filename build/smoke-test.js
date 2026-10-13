@@ -88,10 +88,27 @@ const noVisual = Object.keys(content).filter(k => {
 });
 if (noVisual.length) errors.push('days without svg/table visuals: ' + noVisual.join(','));
 
+// every day must have a quiz (4+ questions with answer + explanation)
+const noQuiz = [];
+for (let i = 1; i <= 30; i++) {
+  const q = content[i] && content[i].quiz;
+  if (!q || !Array.isArray(q) || q.length < 4 ||
+      q.some(function (x) { return !x.q || !x.a || !x.expl || typeof x.correct !== 'number'; }))
+    noQuiz.push(i);
+}
+if (noQuiz.length) errors.push('days missing quiz (need 4+ questions, q/a/expl/correct): ' + noQuiz.join(','));
+
+// render smoke: subtopic route for day 1 section 1 and frameworks section 2
+global.location.hash = '#/day/1/s/1';
+window.__routeTest && window.__routeTest();
+if (lastHtml.indexOf('Getting Started') === -1) errors.push('subtopic route day1/s1 did not render section');
+
 // render smoke: app.js already rendered the home page on load (init &rarr; route).
 // lastHtml was captured by the content shim; navHtml by the nav shim.
-if (!lastHtml || !lastHtml.includes('Master .NET in 30 Days')) errors.push('home route did not render');
-if (!navHtml || !navHtml.includes('nav-item')) errors.push('nav did not render');
+global.location.hash = '#/home';
+window.__routeTest && window.__routeTest();
+if (!lastHtml || lastHtml.indexOf('Master .NET in 30 Days') === -1) errors.push('home route did not render');
+if (!navHtml || navHtml.indexOf('nav-item') === -1) errors.push('nav did not render');
 
 if (errors.length) {
   console.error('SMOKE FAILURES:');

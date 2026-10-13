@@ -202,5 +202,53 @@ public record OrderRow(int Id, string FormattedTotal, string StatusColor);  // d
   <li><code>ModelState.IsValid</code> &rarr; redisplay, then Post-Redirect-Get with TempData; anti-forgery on every form.</li>
   <li>Filters are MVC&rsquo;s per-action middleware; minimal APIs use endpoint filters instead.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Create a custom tag helper <code>&lt;priority-badge&gt;</code> rendering colored HTML from an attribute.</li><li>Add a view component that renders the top-3 oldest open tasks &mdash; inject the repo via DI.</li><li>Make the create form re-render preserving user input after invalid POST (inspect ModelState).</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Tag helpers like asp-for give you…",
+      "a": [
+        "Client-side caching",
+        "Compile-time-checked URLs/fields bound to your model",
+        "CSS generation",
+        "Minification"
+      ],
+      "correct": 1,
+      "expl": "Rename a property and the compiler shows every affected view."
+    },
+    {
+      "q": "Post-Redirect-Get exists to…",
+      "a": [
+        "Speed up posts",
+        "Prevent double-submit on refresh after POST",
+        "Cache forms",
+        "Log traffic"
+      ],
+      "correct": 1,
+      "expl": "Redirect after POST turns refresh into a harmless GET."
+    },
+    {
+      "q": "View components differ from partials because they…",
+      "a": [
+        "Are faster",
+        "Have their own logic + DI, like mini-controllers",
+        "Need no model",
+        "Are client-side"
+      ],
+      "correct": 1,
+      "expl": "Use for carts, panels, anything with logic + markup."
+    },
+    {
+      "q": "ViewModels exist to…",
+      "a": [
+        "Reduce file count",
+        "Shape data per screen and block over-posting",
+        "Replace entities",
+        "Avoid Razor"
+      ],
+      "correct": 1,
+      "expl": "Screens get exactly their data; attackers cannot post undeclared fields."
+    }
+  ]
+
 };

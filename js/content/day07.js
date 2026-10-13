@@ -131,5 +131,53 @@ switch (command)
   <li>JSON persistence is ~15 lines with System.Text.Json.</li>
   <li>LINQ turns report generation into one readable pipeline.</li>
 </ul>
-`
+<h2>Challenge mode &#127942;</h2><ul><li>Add <code>search &lt;text&gt;</code> using LINQ over titles with case-insensitive matching.</li><li>Backup <code>tasks.json</code> to <code>tasks.backup.json</code> before every save &mdash; then corrupt the main file and recover.</li><li>Refactor the switch into <code>IDictionary&lt;string, Action&lt;string[]&gt;&gt;</code> dispatch and add a new command in one line.</li></ul>
+`,
+  quiz: [
+    {
+      "q": "Why separate Program, TaskStore, and tasks.json?",
+      "a": [
+        "It looks professional",
+        "UI, business rules, and persistence can change independently + be tested",
+        "JSON is required",
+        "It compiles faster"
+      ],
+      "correct": 1,
+      "expl": "Layering makes the store unit-testable without a console and swappable to EF later."
+    },
+    {
+      "q": "record TaskItem(...) with { IsDone = true } does…",
+      "a": [
+        "Mutates the record",
+        "Creates a copy with that field changed",
+        "Nothing",
+        "A shallow exception"
+      ],
+      "correct": 1,
+      "expl": "with is nondestructive mutation — the original is untouched."
+    },
+    {
+      "q": "TryGetValue on a Dictionary is preferred over indexer access when…",
+      "a": [
+        "Speed matters",
+        "The key may be missing — no exception",
+        "The dictionary is large",
+        "Values are nullable"
+      ],
+      "correct": 1,
+      "expl": "Indexer throws on missing keys; TryGetValue returns false."
+    },
+    {
+      "q": "System.Text.Json with WriteIndented=true affects…",
+      "a": [
+        "Parsing speed",
+        "Only formatting of the output",
+        "Property names",
+        "Encoding"
+      ],
+      "correct": 1,
+      "expl": "Indentation is cosmetic; naming policy is what changes property names."
+    }
+  ]
+
 };
