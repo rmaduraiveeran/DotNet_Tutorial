@@ -213,6 +213,15 @@
     return html;
   }
 
+  function sectionSnippet(html, max) {
+    var text = html.replace(/<h2[^>]*>[\s\S]*?<\/h2>/, "");
+    var pm = text.match(/<p[^>]*>([\s\S]*?)<\/p>/);
+    var t = pm ? pm[1] : text;
+    t = t.replace(/<[^>]+>/g, " ").replace(/&mdash;/g, "-").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+    if (t.length > max) t = t.slice(0, max - 1).replace(/\s\S*$/, "") + "\u2026";
+    return t;
+  }
+
   function renderDay(d) {
     var body = content[d.id];
     var lvl = '<span class="badge ' + d.level + '">' + d.level + "</span>";
@@ -225,16 +234,17 @@
     html += objectivesHtml(d);
 
     if (body) {
-      // "In this topic" — subtopic subpage cards (every section becomes its own page)
+      // "In this topic" — subtopic subpage cards, each with a real summary of its section
       var sections = splitSections("d" + d.id, body.html);
       if (sections.length > 1) {
         html += '<h2 class="subtopic-h">In this topic <span class="muted small">(' + sections.length + ' subtopics)</span></h2>';
         html += '<div class="card-grid">';
         sections.forEach(function (s) {
           var mins = Math.max(3, Math.round((body.html.length / sections.length) / 900));
+          var label = s.id === 0 ? "Overview" : "Subtopic " + s.id;
           html += '<a class="card subtopic-card" href="#/day/' + d.id + '/s/' + s.id + '">' +
-            '<div class="card-top"><span class="card-num">Subtopic ' + s.id + " \u00B7 ~" + mins + " min</span></div>" +
-            "<h3>" + esc(s.title) + "</h3><p>Deep-dive page with focused explanations, code, and diagrams.</p></a>";
+            '<div class="card-top"><span class="card-num">' + label + " \u00B7 ~" + mins + " min</span></div>" +
+            "<h3>" + esc(s.title) + "</h3><p>" + esc(sectionSnippet(s.html, 110)) + "</p></a>";
         });
         html += "</div>";
       }
@@ -245,13 +255,55 @@
       if (body.quiz && body.quiz.length) {
         html += renderQuiz("d", d.id, body.quiz);
       }
-      if (!body.quiz) {
-        html += '<div class="callout warning"><div class="co-title">Quiz coming</div><p>Checkpoint quiz for this day is being written.</p></div>';
-      }
     } else {
       html += '<div class="callout warning"><div class="co-title">Content missing</div><p>Lesson content for day ' + d.id + ' was not found.</p></div>';
     }
     html += pagerHtml(d);
+    return html;
+  }
+
+  /* Detailed overview subpage: intro + objectives + roadmap + quiz status (no quiz here). */
+  function renderDayOverview(d, body, sections, quiz) {    var lvl = '<span class="badge ' + d.level + '">' + d.level + "</span>";
+    var html = '<div class="eyebrow">Day ' + d.id + " \u00B7 Overview \u00B7 " + lvl + "</div>";
+    html += "<h1>" + esc(d.title) + "</h1>";
+    html += '<p class="lede">' + esc(d.subtitle) + "</p>";
+
+    // 1. The lesson's own intro prose (what it is about)
+    html += sections[0].html;
+
+    // 2. Objectives — what you will be able to do
+    html += objectivesHtml(d);
+
+    // 3. Roadmap — every subtopic with a real summary and link
+    var rest = sections.filter(function (x) { return x.id !== 0; });
+    html += '<h2>Lesson roadmap <span class="muted small">(' + rest.length + " subtopics, in order)</span></h2>";
+    html += '<div class="table-wrap"><table><thead><tr><th style="width:52px">#</th><th>Subtopic</th><th>What it covers</th></tr></thead><tbody>';
+    rest.forEach(function (x, i) {
+      html += '<tr><td><a href="#/day/' + d.id + '/s/' + x.id + '">' + (i + 1) + "</a></td>" +
+        '<td><a href="#/day/' + d.id + '/s/' + x.id + '">' + esc(x.title) + "</a></td>" +
+        "<td>" + esc(sectionSnippet(x.html, 160)) + "</td></tr>";
+    });
+    html += "</tbody></table></div>";
+
+    // 4. Checkpoint status — quiz lives at the end of the lesson, not here
+    var score = quiz ? quizScore("d", d.id, quiz) : null;
+    html += '<div class="callout ' + (score ? (score.right === score.total ? "tip" : "note") : "note") + '"><div class="co-title">\u2753 Checkpoint quiz</div>';
+    if (score) {
+      html += "<p>You scored <strong>" + score.right + " / " + score.total + "</strong>" +
+        (score.right === score.total ? " \u2014 perfect. " : " \u2014 review the explanations for the ones you missed, then retry. ") +
+        'The quiz is at the end of the last subtopic, or <a href="#/day/' + d.id + '">on the main day page</a>.</p>';
+    } else {
+      html += "<p>A " + (quiz ? quiz.length : 4) + "-question checkpoint waits at the end of this lesson \u2014 finish the subtopics in order, then take it. You can also take it from the <a href=\"#/day/" + d.id + '">main day page</a>.</p>';
+    }
+    html += "</div>";
+
+    // 5. Start-here CTA + pager
+    if (rest.length) {
+      html += '<a class="next card" style="display:block;max-width:300px" href="#/day/' + d.id + '/s/' + rest[0].id + '"><div class="card-top"><span class="card-num">Begin</span></div><h3>' + esc(rest[0].title) + "</h3><p>Start with subtopic 1 of " + rest.length + ".</p></a>";
+    }
+    html += '<div class="pager"><a class="prev" href="#/day/' + d.id + '"><div class="dir">\u2190 Back</div><div class="pt">Full lesson (all subtopics on one page)</div></a>';
+    html += rest.length ? '<a class="next" href="#/day/' + d.id + '/s/' + rest[0].id + '"><div class="dir">Start \u2192</div><div class="pt">' + esc(rest[0].title) + "</div></a>" : "";
+    html += "</div>";
     return html;
   }
 
@@ -260,20 +312,26 @@
     var sections = body ? splitSections("d" + d.id, body.html) : [];
     var s = sectionBySlug(sections, slug);
     if (!s) return '<div class="callout danger"><div class="co-title">Not found</div><p>No such subtopic. <a href="#/day/' + d.id + '">Back to Day ' + d.id + '</a>.</p></div>';
-    var prev = sections[sections.indexOf(s) - 1], next = sections[sections.indexOf(s) + 1];
+    if (s.id === 0) return renderDayOverview(d, body, sections, body.quiz);
+
+    var pos = sections.indexOf(s);
+    var prev = sections[pos - 1], next = sections[pos + 1];
+    var isLast = pos === sections.length - 1;
     var lvl = '<span class="badge ' + d.level + '">' + d.level + "</span>";
-    var html = '<div class="eyebrow">Day ' + d.id + " \u00B7 Subtopic " + s.id + " of " + (sections.length - 1) + " \u00B7 " + lvl + "</div>";
+    var html = '<div class="crumbs"><a href="#/day/' + d.id + '">Day ' + d.id + " \u00B7 " + esc(d.title) + "</a> / Subtopic " + s.id + "</div>";
+    html += '<div class="eyebrow">Day ' + d.id + " \u00B7 Subtopic " + s.id + " of " + (sections.length - 1) + " \u00B7 " + lvl + "</div>";
     html += "<h1>" + esc(s.title) + "</h1>";
-    html += '<p class="lede">' + esc(d.title) + " &mdash; focused subtopic page.</p>";
     html += s.html;
-    if (body.quiz && body.quiz.length) {
+
+    // checkpoint quiz only at the END of the lesson (last subtopic)
+    if (isLast && body.quiz && body.quiz.length) {
       html += renderQuiz("d", d.id, body.quiz);
     }
     var nav = '<div class="pager">';
     nav += prev ? '<a class="prev" href="#/day/' + d.id + '/s/' + prev.id + '"><div class="dir">\u2190 Subtopic</div><div class="pt">' + esc(prev.title) + "</div></a>"
                : '<a class="prev" href="#/day/' + d.id + '"><div class="dir">\u2190 Back</div><div class="pt">Day ' + d.id + " overview</div></a>";
     nav += next ? '<a class="next" href="#/day/' + d.id + '/s/' + next.id + '"><div class="dir">Subtopic \u2192</div><div class="pt">' + esc(next.title) + "</div></a>"
-               : '<a class="next" href="#/day/' + d.id + '"><div class="dir">Done \u2192</div><div class="pt">Back to Day ' + d.id + "</div></a>";
+               : '<a class="next" href="#/day/' + d.id + '"><div class="dir">Done \u2192</div><div class="pt">Back to Day ' + d.id + (isLast ? " \u00B7 take the quiz above first!" : "") + "</div></a>";
     nav += "</div>";
     html += nav;
     return html;
