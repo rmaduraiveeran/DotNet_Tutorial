@@ -122,21 +122,68 @@ app.Run();   // &mdash; plus the extension: user.UserId() reads the &ldquo;sub&r
     }
 }</code></pre></div>
 
+<h2>Step 4 &mdash; rate limiting, logging, and the /health endpoint</h2>
+<div class="codeblock"><div class="codeblock-header">Program.cs &mdash; production hardening</div><pre><code>// Rate limiting &mdash; per-token-bucket, keyed on the authenticated user:
+builder.Services.AddRateLimiter(o =&gt;
+{
+    o.AddFixedWindowLimiter("default", w =&gt;
+    {
+        w.Window = TimeSpan.FromMinutes(1);
+        w.PermitLimit = 100;                       // 100 req/min/user
+        w.QueueLimit = 0;                          // shed excess &mdash; 429
+    });
+    o.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    o.GlobalLimiter = PartitionedRateLimiter.Create&lt;HttpContext, string&gt;(ctx =&gt;
+    {
+        var key = ctx.User.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? "anonymous";
+        return RateLimitPartition.GetFixedWindowLimiter(key, _ =&gt; new()
+        { Window = TimeSpan.FromMinutes(1), PermitLimit = 100 });
+    });
+});
+app.UseRateLimiter();
+
+// Structured logging &mdash; Serilog to console + file (swap sinks per environment):
+//   builder.Host.UseSerilog((ctx, cfg) =&gt; cfg.ReadFrom.Configuration(ctx.Configuration)
+//       .WriteTo.Console().WriteTo.File("logs/api-.log", rollingInterval: RollingInterval.Day));
+
+// Health &mdash; Day 26 wires this properly; ship a basic one now:
+app.MapGet("/health", () =&gt; Results.Ok(new { status = "healthy", utc = DateTime.UtcNow }));
+</code></pre></div>
+
+<h2>Step 5 &mdash; CI workflow (GitHub Actions)</h2>
+<div class="codeblock"><div class="codeblock-header">.github/workflows/ci.yml</div><pre><code>name: ci
+on: [push, pull_request]
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - run: dotnet restore
+      - run: dotnet build --no-restore -warnaserror    # warnings break the build
+      - run: dotnet test --no-build --logger trx
+      - run: dotnet format --verify-no-changes          # style gate</code></pre></div>
+
 <h2>Definition of done</h2>
 <ul>
-  <li>&#9633; All six endpoints return the contracted status codes.</li>
-  <li>&#9633; Users see only their own tasks (filter by claim &mdash; tested).</li>
+  <li>&#9633; All six endpoints return the contracted status codes (401 vs 403 distinguished).</li>
+  <li>&#9633; Users see only their own tasks (resource-based handler &mdash; unit tested).</li>
+  <li>&#9633; Refresh-token flow works; expired access tokens can renew without re-login.</li>
+  <li>&#9633; Rate limiting active: a 101st request in a minute gets 429.</li>
   <li>&#9633; OpenAPI documents every endpoint and status code.</li>
-  <li>&#9633; <code>dotnet test</code> green: at least 6 integration tests, one per flow.</li>
-  <li>&#9633; README with run instructions (git init &amp; commit &mdash; this is a portfolio piece).</li>
+  <li>&#9633; <code>dotnet test</code> green: 6+ integration tests + unit tests for services and the auth handler.</li>
+  <li>&#9633; CI workflow runs build + tests + format check on every push.</li>
+  <li>&#9633; README with run instructions, architecture diagram, and a features table (portfolio piece).</li>
 </ul>
-<div class="callout tip"><div class="co-title">Stretch</div><p>Rate-limit with <code>AddRateLimiter</code>, add an <code>Etag</code> concurrency check on updates, or deploy the whole thing to Azure App Service / a Linux container &mdash; Day 26 will give you the Dockerfile pattern for free.</p></div>
+<div class="callout tip"><div class="co-title">Stretch</div><p>ETag concurrency on <code>PUT</code> (412 on stale &mdash; Day 16), output caching on the list endpoint, deploy to Azure App Service / a Linux container &mdash; Day 26 hands you the Dockerfile and compose file for free.</p></div>
 
 <h2>Key takeaways</h2>
 <ul>
   <li>Domain layer stays dependency-free; the API project composes it.</li>
   <li>EF migrations make schema a CI/CD concern, not a manual step.</li>
   <li>Integration tests via WebApplicationFactory catch what units cannot.</li>
+  <li>Rate limiting + structured logging + health endpoints are part of "done", not polish.</li>
   <li>This project is a job-interview artifact &mdash; keep improving it.</li>
 </ul>
 `
