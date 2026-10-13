@@ -1,0 +1,75 @@
+/* Course data: 30-day curriculum metadata */
+/* Each day: id, title, subtitle, level, week, duration, objectives[] */
+/* Content lives in js/content/dayNN.js as window.DAY_CONTENT[NN] = {html...} */
+window.COURSE_DAYS = [
+  { id: 1,  title: "Getting Started with .NET",           subtitle: "SDK, CLI, and your first program",          level: "beginner",     week: 1, minutes: 45,
+    objectives: ["Install the .NET SDK and verify with the CLI", "Explain source code &rarr; IL &rarr; JIT execution", "Create, build, and run a console project", "Read an SDK-style csproj"] },
+  { id: 2,  title: "C# Fundamentals",                     subtitle: "Types, variables, operators",               level: "beginner",     week: 1, minutes: 50,
+    objectives: ["Distinguish value vs reference types", "Choose correct built-in types (decimal for money)", "Use string interpolation and TryParse", "Write null-safe code with ? / ?. / ??"] },
+  { id: 3,  title: "Control Flow & Methods",              subtitle: "if, loops, functions, params",              level: "beginner",     week: 1, minutes: 50,
+    objectives: ["Choose between switch expressions and if/else", "Pick the right loop for the job", "Write methods with optional, out, and params arguments", "Apply single-responsibility method design"] },
+  { id: 4,  title: "Collections & Arrays",                subtitle: "Lists, dictionaries, spans",                level: "beginner",     week: 1, minutes: 50,
+    objectives: ["Select the right collection by complexity", "Use collection expressions and spreads", "Pre-allocate lists for known sizes", "Recognize Span&lt;T&gt; as copy-free slicing"] },
+  { id: 5,  title: "Object-Oriented Programming",         subtitle: "Classes, inheritance, interfaces",          level: "beginner",     week: 1, minutes: 60,
+    objectives: ["Encapsulate state behind methods and properties", "Apply the four OOP pillars in C#", "Program against interfaces", "Use records for immutable data with value equality"] },
+  { id: 6,  title: "LINQ & Functional C#",                subtitle: "Queries, lambdas, projections",             level: "beginner",     week: 1, minutes: 55,
+    objectives: ["Build Where/Select/OrderBy pipelines", "Aggregate with Count/Sum/MaxBy/Any", "Group data and project summaries", "Avoid deferred-execution and double-enumeration bugs"] },
+  { id: 7,  title: "Week 1 Project &mdash; CLI Tool",           subtitle: "Build a task tracker console app",          level: "beginner",     week: 1, minutes: 90,
+    objectives: ["Model data with records and enums", "Persist state with System.Text.Json", "Layer UI, logic, and storage", "Use LINQ for reporting"] },
+
+  { id: 8,  title: "Delegates, Events & Lambdas",         subtitle: "Callbacks and the event pattern",           level: "intermediate", week: 2, minutes: 50,
+    objectives: ["Explain Func, Action, and lambdas", "Declare and raise events safely", "Understand closures and captured variables", "See where delegates power LINQ, middleware, MVVM"] },
+  { id: 9,  title: "Generics & Constraints",              subtitle: "Reusable, type-safe code",                  level: "intermediate", week: 2, minutes: 50,
+    objectives: ["Write generic types and methods", "Apply class/struct/interface/new() constraints", "Explain covariance and contravariance", "Replace object-based code with generics"] },
+  { id: 10, title: "Exception Handling & Resources",      subtitle: "try/catch, using, disposal",                level: "intermediate", week: 2, minutes: 45,
+    objectives: ["Handle exceptions without swallowing or lying", "Use exception filters and custom exceptions", "Manage resources with using and IDisposable", "Choose between exceptions and Result types"] },
+  { id: 11, title: "Async/Await & Concurrency",           subtitle: "Tasks, cancellation, thread-safety",        level: "intermediate", week: 2, minutes: 60,
+    objectives: ["Explain what await does to threads", "Run independent work concurrently with WhenAll", "Propagate CancellationToken cooperatively", "Use Interlocked, locks, and concurrent collections"] },
+  { id: 12, title: "File I/O, JSON & Serialization",      subtitle: "System.Text.Json, streams",                 level: "intermediate", week: 2, minutes: 50,
+    objectives: ["Choose whole-file helpers vs streaming", "Control JSON with naming policy and attributes", "Round-trip records as DTOs", "Design versionable data contracts"] },
+  { id: 13, title: "Testing & xUnit",                     subtitle: "Unit tests, mocks, TDD basics",             level: "intermediate", week: 2, minutes: 55,
+    objectives: ["Write AAA-style Fact and Theory tests", "Use fakes, stubs, and mocks appropriately", "Follow the test pyramid", "Practice the red-green-refactor loop"] },
+  { id: 14, title: "Dependency Injection & Configuration",subtitle: "IServiceCollection, options pattern",      level: "intermediate", week: 2, minutes: 55,
+    objectives: ["Register services with the right lifetime", "Avoid captive-dependency bugs", "Bind and validate strongly-typed options", "Keep a single composition root"] },
+
+  { id: 15, title: "ASP.NET Core Fundamentals",           subtitle: "Minimal APIs, middleware, Kestrel",         level: "advanced",     week: 3, minutes: 60,
+    objectives: ["Describe host &rarr; server &rarr; middleware &rarr; endpoints", "Build minimal APIs with DI injection", "Order middleware correctly", "Manage environments and user secrets"] },
+  { id: 16, title: "Web APIs & REST Design",              subtitle: "Routing, validation, OpenAPI",              level: "advanced",     week: 3, minutes: 60,
+    objectives: ["Design resource-oriented routes", "Return correct status codes and ProblemDetails", "Validate with DataAnnotations", "Document with OpenAPI for client generation"] },
+  { id: 17, title: "Entity Framework Core",               subtitle: "Code-first, migrations, LINQ-to-SQL",       level: "advanced",     week: 3, minutes: 65,
+    objectives: ["Map entities and relationships", "Create and apply migrations", "Translate LINQ to efficient SQL", "Fix N+1 and use AsNoTracking"] },
+  { id: 18, title: "MVC & Razor Views",                   subtitle: "Controllers, models, Razor syntax",         level: "advanced",     week: 3, minutes: 55,
+    objectives: ["Explain the MVC round trip", "Write Razor views with tag helpers", "Build screen-specific ViewModels", "Apply PRG pattern and anti-forgery"] },
+  { id: 19, title: "Blazor & Component UI",               subtitle: "Components, bindings, lifecycle",           level: "advanced",     week: 3, minutes: 60,
+    objectives: ["Choose a render mode (server/WASM/auto/static)", "Build components with parameters and EventCallbacks", "Use lifecycle hooks for data loading", "Compare Blazor against JS frameworks"] },
+  { id: 20, title: "Authentication & Authorization",      subtitle: "JWT, Identity, policy-based authz",         level: "advanced",     week: 3, minutes: 60,
+    objectives: ["Distinguish authentication from authorization", "Configure JWT bearer auth", "Write policies with roles and claims", "Set up Identity with hashed passwords"] },
+  { id: 21, title: "Week 3 Project &mdash; Full-Stack API",     subtitle: "Build and secure a REST API",               level: "advanced",     week: 3, minutes: 120,
+    objectives: ["Structure a layered solution", "Persist with EF Core + migrations", "Secure per-user data with JWT + claims", "Integration-test with WebApplicationFactory"] },
+
+  { id: 22, title: "MVVM Pattern",                        subtitle: "Bindings, commands, Community.Mvvm",        level: "expert",       week: 4, minutes: 55,
+    objectives: ["Explain View-ViewModel-Model responsibilities", "Generate properties and commands with source generators", "Test ViewModels without UI", "Know the threading and collection pitfalls"] },
+  { id: 23, title: ".NET MAUI & Cross-Platform UI",       subtitle: "One codebase, six platforms",               level: "expert",       week: 4, minutes: 55,
+    objectives: ["Describe how MAUI maps to native controls", "Reuse MVVM ViewModels across platforms", "Consume platform services via DI", "Choose between MAUI, Avalonia, Blazor Hybrid"] },
+  { id: 24, title: "Microservices & gRPC",                subtitle: "Service boundaries, RPC, resilience",       level: "expert",       week: 4, minutes: 60,
+    objectives: ["Decide when to split a monolith", "Define gRPC contracts in protobuf", "Add retry, circuit breaker, timeout", "Reason about eventual consistency"] },
+  { id: 25, title: "Microsoft Orleans",                   subtitle: "Virtual actors, grains, persistence",       level: "expert",       week: 4, minutes: 60,
+    objectives: ["Explain virtual actors vs classic actors", "Build grains with persistent state", "Compose grains without locks", "Judge when Orleans fits (and when it does not)"] },
+  { id: 26, title: "Cloud-Native .NET & Docker",          subtitle: "Containers, health checks, telemetry",      level: "expert",       week: 4, minutes: 60,
+    objectives: ["Write multi-stage Dockerfiles", "Expose liveness vs readiness probes", "Wire OpenTelemetry traces and metrics", "Configure 12-factor via environment"] },
+  { id: 27, title: "Performance & Memory Deep Dive",      subtitle: "Span, pooling, benchmarking",               level: "expert",       week: 4, minutes: 65,
+    objectives: ["Explain stack, heap, and GC generations", "Benchmark with BenchmarkDotNet + MemoryDiagnoser", "Reduce allocations with Span and stackalloc", "Pool buffers and heavy objects"] },
+  { id: 28, title: "AI Integration with .NET",            subtitle: "ML.NET, Semantic Kernel, LLMs",             level: "expert",       week: 4, minutes: 60,
+    objectives: ["Map the AI integration stack", "Program against IChatClient abstractions", "Implement function calling with C# tools", "Build a RAG pipeline with embeddings"] },
+  { id: 29, title: "Prompt Engineering for .NET Devs",    subtitle: "Designing effective LLM prompts",           level: "expert",       week: 4, minutes: 50,
+    objectives: ["Structure prompts: role, task, context, rules, format", "Force and parse structured output", "Defend against prompt injection", "Evaluate prompts with golden sets"] },
+  { id: 30, title: "Capstone & Next Steps",               subtitle: "Ship a portfolio project",                  level: "expert",       week: 4, minutes: 90,
+    objectives: ["Assemble a full-stack, deployed capstone", "Present architecture with diagrams and README", "Map your next 90 days of specialization", "Commit to a shipping habit"] },
+];
+
+window.LEVEL_ORDER = ["beginner", "intermediate", "advanced", "expert"];
+
+window.FRAMEWORK_GUIDE = {
+  title: "Framework Comparison: .NET Framework vs .NET Core vs Modern .NET",
+  route: "#/frameworks"
+};
